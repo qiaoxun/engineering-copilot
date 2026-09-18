@@ -89,6 +89,11 @@ feat_num() {  # feat_num <feature> → 去掉 F 前缀的编号，如 F10-platfo
 
 # ---------- --status ----------
 if [[ $STATUS_ONLY -eq 1 ]]; then
+  order=""
+  for f in "${FEATURES[@]}"; do order="${order:+$order → }${f%%-*}"; done
+  echo ">> 执行顺序 = 依赖序（implement 恒按此串行）：$order"
+  echo "   （F10 是平台地基：对象模型/状态机/审计/RBAC，其余功能都构建在其上）"
+  echo
   printf "%-26s %-8s %-6s %-6s %-8s %-6s\n" FEATURE CLARIFY PLAN TASKS ANALYZE IMPL
   for f in "${FEATURES[@]}"; do
     printf "%-26s %-8s %-6s %-6s %-8s %-6s\n" "$f" \
@@ -238,6 +243,9 @@ for i in "${!FEATURES[@]}"; do
 done
 
 echo ">> Agent: $AGENT_BIN | Stages: $STAGES | Jobs(plan/tasks): $JOBS"
+order=""
+for f in "${FEATURES[@]}"; do order="${order:+$order → }${f%%-*}"; done
+echo ">> 执行顺序 = 依赖序（implement 恒按此串行）：$order"
 echo ">> 待处理 feature: ${#run_list[@]} 个"
 [[ ${#run_list[@]} -eq 0 ]] && { echo ">> 没有匹配的 feature。"; exit 0; }
 
